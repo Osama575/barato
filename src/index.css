@@ -8,5 +8,7 @@
 
 @theme {
     --color-primary: #C83232;
+    --color-secondary: #ffffff;
+    --color-tertiary: #000000;
     --font-poppins: "Poppins", serif;
 }
