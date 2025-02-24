@@ -1,11 +1,21 @@
+import { Route, Routes } from "react-router"
+import Layout from "./pages/Layout"
 
 
 function App() {
 
   return (
-    <>
-      Hello Omojolomoloju
-    </>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+
+      
+
+
+
+
+
+      </Route>
+    </Routes>
   )
 }
 
