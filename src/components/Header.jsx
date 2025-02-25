@@ -57,7 +57,7 @@ function Header() {
       {/* third section bg-tertiary */}
 
       <div className='bg-tertiary h-[81px]'>
-        <div className='bg-secondary  '>
+        <div className='bg-secondary '>
         </div>
         <div></div>
       </div>
