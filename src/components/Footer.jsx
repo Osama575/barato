@@ -6,6 +6,8 @@ import line from '/src/assets/Line.svg'
 
 function Footer() {
   return (
+
+      // we can remove the margin top
     <div className='w-screen h-[400px] mt-60'>
 
       {/* first section bg-red */}
@@ -16,6 +18,7 @@ function Footer() {
          <h1 className='text-lg'>Shop Smart,shop more</h1>
          <p className='text-sm '>Find everything you need, from groceries to household essentials, all in one place – delivered straight to your doorstep!</p>
         </div>
+        
         <div className='flex justify-between items-start  w-2/3 mx-64'>
           <div className='flex flex-col gap-3'>
             <h1 className='font-semibold text-[20px]'>PAGES</h1>
