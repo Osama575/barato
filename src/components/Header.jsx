@@ -56,10 +56,19 @@ function Header() {
 
       {/* third section bg-tertiary */}
 
-      <div className='bg-tertiary h-[51px]'>
-        <div className='bg-secondary  '>
+      <div className='bg-tertiary h-[51px] px-10 flex items-center gap-30'>
+        <div className='bg-[#F2F2F5] w-[300px] flex items-center justify-center font-semibold text-lg h-full'>
+          ALL DEPARTMENTS
         </div>
-        <div></div>
+        <nav className=''>
+          <ul className='flex gap-16 text-[16px] text-white items-center justify-center'>
+            <li className='text-primary'>HOME</li>
+            <li>SHOP</li>
+            <li>ABOUT</li>
+            <li>FAQ</li>
+            <li>CONTACT</li>
+          </ul>
+        </nav>
       </div>
     </div>
   )
