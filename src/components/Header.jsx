@@ -40,10 +40,10 @@ function Header() {
 
         {/* second section bg-red */}
 
-      <div className='bg-primary h-[127px] w-full flex justify-between items-center px-10'>
+      <div className='bg-primary lg:h-[127px] h-[80px] w-full flex justify-between items-center px-10'>
         <div className='flex flex-col'>
-          <img src={logo} className='w-36  object-contain ' />
-          <p className='text-xs text-secondary'>Shop smart, shop more!</p>
+          <img src={logo} className='lg:w-36 w-24  object-contain ' />
+          <p className='lg:text-xs text-[10px] text-secondary'>Shop smart, shop more!</p>
         </div>
 
       
@@ -57,8 +57,8 @@ function Header() {
 
           <div className='flex text-secondary gap-3'>
             <div className='relative'>
-              <img src={cart} alt="" className='w-9 h-9' />
-              <p className='absolute bg-secondary text-tertiary text-xs -top-3 -right-2 px-2 py-1 rounded-full'>2</p>
+              <img src={cart} alt="" className='lg:w-9 lg:h-9 w-7 h-7' />
+              <p className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'>2</p>
             </div>
             <div className='hidden lg:flex flex-col text-sm'>
               <p>SHOPPING CART</p>

@@ -9,7 +9,7 @@ function Footer() {
   return (
 
       // we can remove the margin top
-    <div className='w-screen lg:h-[400px] h-full mt-60'>
+    <div className='w-screen lg:h-[400px] h-full'>
 
       {/* first section bg-red */}
 
