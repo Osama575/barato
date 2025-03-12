@@ -3,23 +3,27 @@ import twitter from '/src/assets/x.svg'
 import instagram from '/src/assets/ig.svg'
 import facebook from '/src/assets/fb.svg'
 import line from '/src/assets/Line.svg'
+import logo from '../assets/barato-logo-white.svg';
 
 function Footer() {
   return (
 
       // we can remove the margin top
-    <div className='w-screen h-[400px] mt-60'>
+    <div className='w-screen lg:h-[400px] h-full mt-60'>
 
       {/* first section bg-red */}
 
-      <div className='bg-primary h-[86%] px-10 text-white flex items-center justify-between '>
-        <div className='flex flex-col gap-4  w-1/3'>
-         <h1 className='text-6xl font-bold text-secondary '>LOGO</h1>
-         <h1 className='text-lg'>Shop Smart,shop more</h1>
+      <div className='bg-primary h-[86%] lg:px-10 px-5 text-white flex lg:flex-row flex-col items-center justify-between lg:pt-0 pt-10'>
+        <div className='w-full flex flex-col gap-4  lg:w-1/3'>
+        <div>
+          <img src={logo} className='w-36 object-contain ' />
+          <h1 className='text-lg'>Shop Smart,shop more</h1>
+        </div>
+
          <p className='text-sm '>Find everything you need, from groceries to household essentials, all in one place – delivered straight to your doorstep!</p>
         </div>
         
-        <div className='flex justify-between items-start  w-2/3 mx-64'>
+        <div className='w-full flex flex-col lg:flex-row justify-between items-start  lg:w-2/3 lg:mx-64 gap-10 mb-10 lg:mt-0 mt-8'>
           <div className='flex flex-col gap-3'>
             <h1 className='font-semibold text-[20px]'>PAGES</h1>
             <img src={line} alt="" className='w-[35px] ' />
@@ -50,7 +54,7 @@ function Footer() {
 
       {/* second section bg-black */}
 
-      <div className='h-[14%] bg-black text-white flex justify-center items-center font-semibold text-[20px]'>
+      <div className='h-[14%] bg-black text-white flex justify-center items-center font-semibold lg:text-[20px] text-base p-2'>
         Copyright c 2025. All rights reserved 
       </div>
     </div>
