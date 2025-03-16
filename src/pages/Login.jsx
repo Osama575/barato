@@ -1,4 +1,5 @@
 import React from 'react'
+import { FiEye } from "react-icons/fi";
 
 const Login = () => {
   return (
@@ -8,7 +9,10 @@ const Login = () => {
         <p className='text-xs text-gray-500 mb-5'>Please login below</p>
         <div className='flex flex-col gap-7'>
           <input className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name="FirstName" id="" placeholder='Email' />
-          <input className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name="FirstName" id="" placeholder='Password' />
+          <div className='relative'>
+            <input className='w-full border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name="FirstName" id="" placeholder='Password' />
+            <FiEye className='absolute right-5 top-3'/>
+          </div>
           <button className='bg-primary rounded-sm shadow-lg h-10 text-white font-semibold'>Sign in</button>
           <a href="" className='text-primary text-center'>Forgot Your Password?</a>
         </div>

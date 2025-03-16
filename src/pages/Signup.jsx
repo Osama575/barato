@@ -12,8 +12,8 @@ const Signup = () => {
           <input className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name='' id='' placeholder='Last Name' />
           <input className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name="FirstName" id="" placeholder='Email' />
           <div className='relative'>
-          <input className='w-full border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name="FirstName" id="" placeholder='Password' />
-          <FiEye className='absolute right-5 top-3'/>
+            <input className='w-full border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name="FirstName" id="" placeholder='Password' />
+            <FiEye className='absolute right-5 top-3'/>
           </div>
           <button className='bg-primary rounded-sm shadow-lg h-10 text-white font-semibold mb-6'>Create</button>
         </div>

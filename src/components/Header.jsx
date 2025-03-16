@@ -10,15 +10,15 @@ import logo from '../assets/barato-logo-white.svg';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet"
+import { Link, useLocation, useMatch } from 'react-router'
+import { navigationLinks } from '@/lib/navLinks'
 
 
 function Header() {
   const [openMenu, setOpenMenu] = useState(false)
+  const location = useLocation()
+
   return (
     <div className='w-screen font-poppins' >
        {/* first section bg-white*/}
@@ -38,8 +38,7 @@ function Header() {
         </div>
       </div>
 
-        {/* second section bg-red */}
-
+      {/* second section bg-red */}
       <div className='bg-primary lg:h-[127px] h-[80px] w-full flex justify-between items-center px-10'>
         <div className='flex flex-col'>
           <img src={logo} className='lg:w-36 w-24  object-contain ' />
@@ -82,12 +81,12 @@ function Header() {
         <RiMenu3Line onClick={() => setOpenMenu(!openMenu)} className='w-7 h-7 text-white lg:hidden' />
 
         <nav className='hidden lg:flex'>
-          <ul className='flex gap-16 text-[16px] text-white items-center justify-center'>
-            <li className='text-primary'>HOME</li>
-            <li>SHOP</li>
-            <li>ABOUT</li>
-            <li>FAQ</li>
-            <li>CONTACT</li>
+          <ul className='flex gap-16 text-[16px] text-white items-center justify-center font-normal'>
+            {navigationLinks.map(link => (
+              <Link to={link.path}>
+                <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-white'}`}>{link.name}</li>
+              </Link>
+            ))}
           </ul>
         </nav>
       </div>
@@ -95,11 +94,11 @@ function Header() {
       <Sheet open={openMenu} onOpenChange={setOpenMenu} >
         <SheetContent side='left'>
             <ul className='flex flex-col gap-6 text-[16px] text-black items-start justify-start px-5 py-5'>
-              <li className='text-primary'>HOME</li>
-              <li>SHOP</li>
-              <li>ABOUT</li>
-              <li>FAQ</li>
-              <li>CONTACT</li>
+            {navigationLinks.map(link => (
+              <Link to={link.path}>
+                <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-black'}`}>{link.name}</li>
+              </Link>
+            ))}
             </ul>
         </SheetContent>
       </Sheet>
