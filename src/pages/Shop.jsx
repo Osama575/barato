@@ -19,7 +19,7 @@ function Shop() {
         </div>
 
         {/* PRODUCTS AREA */}
-        <div className='w-full flex items-start gap-5 lg:px-10'>
+        <div className='w-full flex items-start gap-5 lg:px-10 mx-auto 2xl:w-[80%]'>
           {/* FILTER AREA */}
           <div className='lg:w-[441px] p-3'>
             <h1>Filters</h1>
