@@ -5,6 +5,8 @@ import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
+import Shop from "./pages/Shop"
+import SingleProducts from "./pages/SingleProducts"
 
 
 
@@ -23,6 +25,8 @@ function App() {
           <Route path="reset-password" element={<ResetPassword/>} />
         </Route>
 
+        <Route path="shop" element={<Shop />} />
+        <Route path="shop/:id" element={<SingleProducts />} />
       </Route>
     </Routes>
   )
