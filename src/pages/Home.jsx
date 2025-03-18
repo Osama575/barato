@@ -103,7 +103,7 @@ const Home = () => {
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
                         {[1,2,3,4,5].map((_, index) => (
-                            <CarouselItem key={index} className='basis-2/3 lg:basis-1/4'>
+                            <CarouselItem key={index} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
                                 <ProductCard />          
                             </CarouselItem>
                         ))}
@@ -136,7 +136,7 @@ const Home = () => {
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
                         {[1,2,3,4,5].map((_, index) => (
-                            <CarouselItem key={index} className='basis-2/3 lg:basis-1/4'>
+                            <CarouselItem key={index} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
                                 <ProductCard />          
                             </CarouselItem>
                         ))}
