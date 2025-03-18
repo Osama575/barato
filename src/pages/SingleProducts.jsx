@@ -17,8 +17,8 @@ function SingleProducts() {
   return (
     <div className='w-full 2xl:w-[70%] mx-auto lg:w-[80%] lg:px-10 px-6 '>
         <div className='flex flex-col items-center justify-center my-18 lg:flex-row gap-24'>
-            <div className='border border-black/50 w-full h-[500px] flex items-center justify-center lg:w-[450px] lg:h-[400px] md:w-[600px] md:h-[619px] xl:w-[730px] xl:h-[619px]'>
-                <img src={soy} alt="" className='w-full h-full object-cover' />
+            <div className='border border-black/50 w-full h-[500px] flex items-center justify-center lg:w-[450px] lg:h-[500px] md:w-[600px] md:h-[619px] 2xl:w-[730px] 2xl:h-[619px]'>
+                <img src={soy} alt="" className='w-full h-full object-cover aspect-auto' />
             </div>
             <div className='flex flex-col justify-center items-start gap-1 md:w-[600px] lg:w-[400px]'>
                 <h1 className='font-bold text-2xl'>Listerine Cool Mint</h1>
