@@ -13,11 +13,19 @@ import {
 } from "@/components/ui/sheet"
 import { Link, useLocation } from 'react-router'
 import { navigationLinks } from '@/lib/navLinks'
+import { useTranslation } from 'react-i18next'
 
 
 function Header() {
   const [openMenu, setOpenMenu] = useState(false)
   const location = useLocation()
+  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+
 
   return (
     <div className='w-screen font-poppins' >
@@ -30,7 +38,13 @@ function Header() {
         </div>
         <div className='flex justify-between items-center gap-8'>
           <p>USD</p>
-          <p>LANGUAGE </p>
+
+          <select value={i18n.language} onChange={(e) => handleLanguageChange(e.target.value)} className='w-auto px-3 py-1'>
+            <option value='#' disabled >LANGUAGE</option>
+            <option value='en'>ENGLISH</option>
+            <option value='es'>SPANISH</option>
+          </select>
+
           <div className='flex justify-center items-center gap-2'>
             <img src={account} alt="" />
             <p>MY ACCOUNT </p>
@@ -42,15 +56,15 @@ function Header() {
       <div className='bg-primary lg:h-[127px] h-[80px] w-full flex justify-between items-center px-10'>
         <div className='flex flex-col'>
           <img src={logo} className='lg:w-36 w-24  object-contain ' />
-          <p className='lg:text-xs text-[10px] text-secondary'>Shop smart, shop more!</p>
+          <p className='lg:text-xs text-[10px] text-secondary'>{t('slogan')}</p>
         </div>
 
       
           <div className='h-[50px] hidden lg:flex items-center justify-center'>
-            <input type="text" placeholder='Search products..' className='pl-4 border-y border-l w-[600px] rounded-l-lg border-secondary text-secondary h-full placeholder-white placeholder:text-xs' />
+            <input type="text" placeholder={`${t('search products')}...`} className='pl-4 border-y border-l w-[600px] rounded-l-lg border-secondary text-secondary h-full placeholder-white placeholder:text-xs' />
             <button className='bg-black text-white flex items-center justify-center rounded-r-lg h-full gap-3 px-6 text-sm'>
               <img src={search} alt=""  className='w-4 h-4'/>
-              SEARCH
+             {t('search')}
             </button>
           </div>
 
@@ -60,7 +74,7 @@ function Header() {
               <p className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'>2</p>
             </div>
             <div className='hidden lg:flex flex-col text-sm'>
-              <p>SHOPPING CART</p>
+              <p>{ t('cart')}</p>
               <p className='text-sm'>$0.00 USD</p>
             </div>
           </div>
@@ -84,7 +98,7 @@ function Header() {
           <ul className='flex gap-16 text-[16px] text-white items-center justify-center font-normal'>
             {navigationLinks.map(link => (
               <Link to={link.path}>
-                <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-white'}`}>{link.name}</li>
+                <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-white'}`}>{t(`${link.name}`)}</li>
               </Link>
             ))}
           </ul>

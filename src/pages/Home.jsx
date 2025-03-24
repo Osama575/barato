@@ -15,6 +15,8 @@ import {
   import support from '../assets/support.svg'
   import banner from '../assets/bgFixed.png';
 import { Button } from '@/components/ui/button';
+import { dummyProductData } from '@/lib/productsData';
+import { Link } from 'react-router';
 
 const Home = () => {
     const service  = [
@@ -54,9 +56,9 @@ const Home = () => {
                     }),
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
-                        {[1,2,3,4,5].map((_, index) => (
+                        {dummyProductData.map((product, index) => (
                             <CarouselItem key={index} className='basis-2/3 lg:basis-1/4'>
-                                <ProductCard />          
+                                    <ProductCard {...product} />        
                             </CarouselItem>
                         ))}
                     </CarouselContent>
@@ -102,9 +104,11 @@ const Home = () => {
                     }),
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
-                        {[1,2,3,4,5].map((_, index) => (
-                            <CarouselItem key={index} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
-                                <ProductCard />          
+                        {dummyProductData.map((product, index) => (
+                            <CarouselItem key={index + 1} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
+                                
+                                    <ProductCard {...product} />        
+                                     
                             </CarouselItem>
                         ))}
                     </CarouselContent>
@@ -135,9 +139,11 @@ const Home = () => {
                     })
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
-                        {[1,2,3,4,5].map((_, index) => (
+                        {dummyProductData.map((product, index) => (
                             <CarouselItem key={index} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
-                                <ProductCard />          
+                                
+                                    <ProductCard {...product} />        
+                               
                             </CarouselItem>
                         ))}
                     </CarouselContent>

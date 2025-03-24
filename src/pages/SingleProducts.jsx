@@ -12,21 +12,25 @@ import {
   import { RiHeartAdd2Line } from "react-icons/ri";
   import delivery from "/src/assets/delivery.svg";
   import group from "/src/assets/Group.svg";
+import { dummyProductData } from '@/lib/productsData';
+import { Link, useParams } from 'react-router';
 
 function SingleProducts() {
+    const params = useParams()
+    const sp = dummyProductData.find(item => item.productName.toLocaleLowerCase() === params.id.toLocaleLowerCase())
   return (
     <div className='w-full 2xl:w-[70%] mx-auto lg:w-[80%] lg:px-10 px-6 '>
         <div className='flex flex-col items-center justify-center my-18 lg:flex-row gap-24'>
             <div className='border border-black/50 w-full h-[500px] flex items-center justify-center lg:w-[450px] lg:h-[500px] md:w-[600px] md:h-[619px] 2xl:w-[730px] 2xl:h-[619px]'>
-                <img src={soy} alt="" className='w-full h-full object-cover aspect-auto' />
+                <img src={sp.productImage} alt="" className='w-full h-full object-cover aspect-auto' />
             </div>
             <div className='flex flex-col justify-center items-start gap-1 md:w-[600px] lg:w-[400px]'>
-                <h1 className='font-bold text-2xl'>Listerine Cool Mint</h1>
+                <h1 className='font-bold text-2xl'>{sp.productName}</h1>
                 <div className='flex items-center justify-center gap-1'>
-                    <p className='text-base'>$40.00</p> 
-                    <p className='text-primary text-sm line-through'>$50.00</p>
+                    <p className='text-base'>${sp.productPrice.toFixed(2)}</p> 
+                    <p className='text-primary text-sm line-through'>${(sp.productPrice + sp.discountedPrice).toFixed(2)}</p>
                 </div> 
-                <p className='border-b border-black/50 text-xs pb-2'>Introducing our delectable Listerine cool mint Mouth wash, a delightful twist on traditional cereals that will revolutionize your breakfast routine.</p>
+                <p className='border-b border-black/50 text-xs pb-2'>{sp.productDescription}</p>
                 <div className='w-full mt-3 flex justify-between items-center'>
                     <div className='flex items-center justify-center border border-black/50 rounded-xs'>
                         <p className='flex items-center justify-center w-8 h-8 text-xl '>-</p>
@@ -77,9 +81,11 @@ function SingleProducts() {
                         }),
                     ]} className='lg:w-[95%] mb-10 mx-auto'>
                         <CarouselContent>
-                            {[1,2,3,4,5].map((_, index) => (
+                            {dummyProductData.map((product, index) => (
                                 <CarouselItem key={index} className='basis-2/3 md:basis-1/3 lg:basis-1/4 2xl:basis-2/6 '>
-                                    <ProductCard />          
+                                    <Link to={`/shop/${product.productName}`}>
+                                    <ProductCard {...product} />        
+                                 </Link>    
                                 </CarouselItem>
                             ))}
                         </CarouselContent>

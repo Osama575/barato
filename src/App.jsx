@@ -7,6 +7,7 @@ import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
 import Shop from "./pages/Shop"
 import SingleProducts from "./pages/SingleProducts"
+import { ScrollToTop } from "./hooks/ScrollToTop"
 
 
 

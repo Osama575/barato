@@ -1,23 +1,23 @@
 export const navigationLinks = [
     {
         path:'/',
-        name:'Home'
+        name:'home'
     },
     {
         path:'/shop',
-        name:'Shop'
+        name:'shop'
     },
     {
         path:'/about',
-        name:'About'
+        name:'about'
     },
     {
         path:'/faq',
-        name:'Faq'
+        name:'faq'
     },
     {
         path:'/contact',
-        name:'Contact'
+        name:'contact'
     },
   
 ]
