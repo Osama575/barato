@@ -16,9 +16,12 @@ import {
   import banner from '../assets/bgFixed.png';
 import { Button } from '@/components/ui/button';
 import { dummyProductData } from '@/lib/productsData';
-import { Link } from 'react-router';
+import { useGetProductsQuery } from '@/app/features/api/productApiSlice';
+import { useGetProductsByCategoryQuery } from '@/app/features/api/productApiSlice';
 
 const Home = () => {
+     const {data:products} = useGetProductsQuery({searchTerm: ''})
+     const {data} = useGetProductsByCategoryQuery(3)
     const service  = [
         {
             icon: doorstep,
@@ -56,8 +59,8 @@ const Home = () => {
                     }),
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
-                        {dummyProductData.map((product, index) => (
-                            <CarouselItem key={index} className='basis-2/3 lg:basis-1/4'>
+                        {products?.slice(0,5).map((product, index) => (
+                            <CarouselItem key={index} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
                                     <ProductCard {...product} />        
                             </CarouselItem>
                         ))}
@@ -88,9 +91,9 @@ const Home = () => {
             </div>
         </div>
 
-        {/* TOILETRIES CAROUSEL SECTION */}
+        {/* DRINKS CAROUSEL SECTION */}
         <div className='w-full mb-10'>
-            <h1 className='uppercase font-semibold text-primary text-lg'>Toiletries</h1>
+            <h1 className='uppercase font-semibold text-primary text-lg'>Drinks</h1>
             <hr className='h-[2px] bg-black/30' />
             
             <div className='w-full my-5 '>
@@ -104,11 +107,9 @@ const Home = () => {
                     }),
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
-                        {dummyProductData.map((product, index) => (
-                            <CarouselItem key={index + 1} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
-                                
+                        {data?.map((product) => (
+                            <CarouselItem key={product.id} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
                                     <ProductCard {...product} />        
-                                     
                             </CarouselItem>
                         ))}
                     </CarouselContent>

@@ -8,38 +8,45 @@ import {
   } from "@/components/ui/carousel"
   import ProductCard from '@/components/ProductCard'
   import Autoplay from "embla-carousel-autoplay";
-  import soy from '/src/assets/soy.png';
   import { RiHeartAdd2Line } from "react-icons/ri";
   import delivery from "/src/assets/delivery.svg";
   import group from "/src/assets/Group.svg";
-import { dummyProductData } from '@/lib/productsData';
-import { Link, useParams } from 'react-router';
+import { useParams } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/app/features/cartSlice';
+import { useGetProductsQuery, useGetSingleProductQuery } from '@/app/features/api/productApiSlice';
 
 function SingleProducts() {
     const params = useParams()
-    const sp = dummyProductData.find(item => item.productName.toLocaleLowerCase() === params.id.toLocaleLowerCase())
+    const dispatch = useDispatch()
+    const {data:sp} = useGetSingleProductQuery(parseInt(params.id))
+    const {data:products} = useGetProductsQuery({searchTerm: ''})
+
+    const addProduct = (product) => {
+        dispatch(addToCart({...product}))
+    }
   return (
     <div className='w-full 2xl:w-[70%] mx-auto lg:w-[80%] lg:px-10 px-6 '>
         <div className='flex flex-col items-center justify-center my-18 lg:flex-row gap-24'>
             <div className='border border-black/50 w-full h-[500px] flex items-center justify-center lg:w-[450px] lg:h-[500px] md:w-[600px] md:h-[619px] 2xl:w-[730px] 2xl:h-[619px]'>
-                <img src={sp.productImage} alt="" className='w-full h-full object-cover aspect-auto' />
+                <img src={sp?.productImage} alt="" className='w-full h-full object-cover aspect-auto' />
             </div>
             <div className='flex flex-col justify-center items-start gap-1 md:w-[600px] lg:w-[400px]'>
-                <h1 className='font-bold text-2xl'>{sp.productName}</h1>
+                <h1 className='font-bold text-2xl'>{sp?.productName}</h1>
                 <div className='flex items-center justify-center gap-1'>
-                    <p className='text-base'>${sp.productPrice.toFixed(2)}</p> 
-                    <p className='text-primary text-sm line-through'>${(sp.productPrice + sp.discountedPrice).toFixed(2)}</p>
+                    <p className='text-base'>${sp?.productPrice.toFixed(2)}</p> 
+                    <p className='text-primary text-sm line-through'>${(sp?.productPrice + sp?.discountedPrice).toFixed(2)}</p>
                 </div> 
-                <p className='border-b border-black/50 text-xs pb-2'>{sp.productDescription}</p>
-                <div className='w-full mt-3 flex justify-between items-center'>
-                    <div className='flex items-center justify-center border border-black/50 rounded-xs'>
+                <p className='border-b border-black/50 text-xs pb-2'>{sp?.productDescription}</p>
+                <div className='w-full mt-3 flex gap-4 items-center'>
+                    {/* <div className='flex items-center justify-center border border-black/50 rounded-xs'>
                         <p className='flex items-center justify-center w-8 h-8 text-xl '>-</p>
                         <p className='border-l border-black/50 flex items-center justify-center w-15 h-8 text-xl'>1</p>
                         <p className='border-l border-black/5 flex items-center justify-center bg-primary w-8 h-8 text-xl  text-white'>+</p>
-                    </div>
-                    <div className='bg-primary px-6 h-9 rounded-sm shadow-md text-white flex items-center justify-center'>
-                        <button>Add to Cart</button>
-                    </div>
+                    </div> */}
+                    <button onClick={() => addProduct(sp)} className='w-full bg-primary px-6 h-9 rounded-sm shadow-md text-white flex items-center justify-center cursor-pointer'>
+                       Add to Cart
+                    </button>
                     <div className='w-8 h-8 border border-black/50 rounded-xs flex items-center justify-center '>
                      <RiHeartAdd2Line className='w-5 h-5 text-primary' />
                     </div>
@@ -81,11 +88,9 @@ function SingleProducts() {
                         }),
                     ]} className='lg:w-[95%] mb-10 mx-auto'>
                         <CarouselContent>
-                            {dummyProductData.map((product, index) => (
+                            {products?.slice(0,5).map((product, index) => (
                                 <CarouselItem key={index} className='basis-2/3 md:basis-1/3 lg:basis-1/4 2xl:basis-2/6 '>
-                                    <Link to={`/shop/${product.productName}`}>
                                     <ProductCard {...product} />        
-                                 </Link>    
                                 </CarouselItem>
                             ))}
                         </CarouselContent>

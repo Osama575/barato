@@ -5,12 +5,24 @@ import App from './App.jsx'
 import { BrowserRouter } from "react-router";
 import { ScrollToTop } from './hooks/ScrollToTop';
 import './locales/i18n';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './app/store';
+import { ToastContainer } from 'react-toastify';
+import { setAuthState, clearAuthState } from './app/features/authSlice';
+import supabase from './app/supabaseClient';
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-    <ScrollToTop />
-      <App />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ScrollToTop />
+            <ToastContainer  position='top-right'/>
+            <App />
+        </PersistGate>
+      </Provider>
     </BrowserRouter>
   </StrictMode>,
 )

@@ -1,19 +1,33 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import call from '/src/assets/call.svg'
 import account from '/src/assets/account.svg'
 import search from '/src/assets/search.svg'
 import cart from '/src/assets/cart.svg'
 import { FiSearch } from "react-icons/fi";
 import { RiMenu3Line } from "react-icons/ri";
+import { MdOutlineDashboard } from "react-icons/md";
 import logo from '../assets/barato-logo-white.svg';
-
 import {
   Sheet,
   SheetContent,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button"
+import { FaHeart } from "react-icons/fa";
+import { TbLogout } from "react-icons/tb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Link, useLocation } from 'react-router'
-import { navigationLinks } from '@/lib/navLinks'
+import { navigationLinks, Navlanguages } from '@/lib/navLinks'
 import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCartItems } from '@/app/features/cartSlice'
+import { useGetUserQuery, useSignOutUserMutation } from '@/app/features/api/authApiSlice'
 
 
 function Header() {
@@ -21,11 +35,23 @@ function Header() {
   const location = useLocation()
   const { t } = useTranslation();
   const { i18n } = useTranslation();
+  const cartLength = useSelector(selectCartItems)
+  const [signOutUser] = useSignOutUserMutation()
+  const [skip, setSkip] = useState(true)
+  const isOnline = useSelector(state => state.persistedReducer.auth.user)
+  const {data} = useGetUserQuery(isOnline?.id, {
+    skip
+  })
 
   const handleLanguageChange = (lang) => {
     i18n.changeLanguage(lang);
   };
 
+  useEffect(() => {
+    if(isOnline){
+      setSkip(false)
+    }
+  },[isOnline])
 
   return (
     <div className='w-screen font-poppins' >
@@ -39,16 +65,72 @@ function Header() {
         <div className='flex justify-between items-center gap-8'>
           <p>USD</p>
 
-          <select value={i18n.language} onChange={(e) => handleLanguageChange(e.target.value)} className='w-auto px-3 py-1'>
-            <option value='#' disabled >LANGUAGE</option>
-            <option value='en'>ENGLISH</option>
-            <option value='es'>SPANISH</option>
-          </select>
+          {/* LANGUAGES DROPDOWN */}
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+                {Navlanguages.find(l => l.value === i18n.language)?.label}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-[120px] shadow-lg">
+              {Navlanguages.map((item, index) => (
+                <div key={item.value}>
+                  <DropdownMenuItem
+                    onSelect={() => handleLanguageChange(item.value)}
+                    className="cursor-pointer px-4 py-2 hover:bg-gray-50"
+                  >
+                    <span className="text-sm font-medium text-black">{item.label}</span>
+                  </DropdownMenuItem>
+                  {index !== Navlanguages.length - 1 && <DropdownMenuSeparator />}
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <div className='flex justify-center items-center gap-2'>
-            <img src={account} alt="" />
-            <p>MY ACCOUNT </p>
-          </div>
+             {/* USER ACCOUNT DROPDOWN */}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className='flex justify-center items-center gap-2'>
+                  <img src={account} alt="" />
+                  <p>MY ACCOUNT </p>
+                </div>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent>
+                {isOnline ? (
+                  <>
+                  <DropdownMenuItem className='font-medium'>
+                  <img src={account} alt="" />
+                   User Dashboard
+                  </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <FaHeart className='text-primary w-8 h-8' />
+                    Favourites
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {data && data[0]?.role === 'admin' && (
+                    <DropdownMenuItem >
+                      <MdOutlineDashboard className='text-primary w-8 h-8' />
+                      <Link to='/admin' className='w-full h-full'>
+                         Admin Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                    <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOutUser()} >
+                    <TbLogout className='text-primary w-8 h-8' />
+                    Logout
+                  </DropdownMenuItem>
+                  </>  
+                ): (
+                  <DropdownMenuItem >
+                      <Link to='/auth' className='w-full h-full'>
+                        Login
+                      </Link>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+        
         </div>
       </div>
 
@@ -70,11 +152,13 @@ function Header() {
 
           <div className='flex text-secondary gap-3'>
             <div className='relative'>
+            <Link to='/cart'>
               <img src={cart} alt="" className='lg:w-9 lg:h-9 w-7 h-7' />
-              <p className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'>2</p>
+              </Link>
+              <p className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'>{cartLength.length}</p>
             </div>
             <div className='hidden lg:flex flex-col text-sm'>
-              <p>{ t('cart')}</p>
+              <Link to='/cart'>{ t('cart')}</Link>
               <p className='text-sm'>$0.00 USD</p>
             </div>
           </div>
@@ -97,7 +181,7 @@ function Header() {
         <nav className='hidden lg:flex'>
           <ul className='flex gap-16 text-[16px] text-white items-center justify-center font-normal'>
             {navigationLinks.map(link => (
-              <Link to={link.path}>
+              <Link key={link.path} to={link.path}>
                 <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-white'}`}>{t(`${link.name}`)}</li>
               </Link>
             ))}
@@ -109,7 +193,7 @@ function Header() {
         <SheetContent side='left'>
             <ul className='flex flex-col gap-6 text-[16px] text-black items-start justify-start px-5 py-5'>
             {navigationLinks.map(link => (
-              <Link to={link.path}>
+              <Link onClick={() => setOpenMenu(false)} key={link.path} to={link.path}>
                 <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-black'}`}>{link.name}</li>
               </Link>
             ))}
