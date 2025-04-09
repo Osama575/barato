@@ -15,10 +15,8 @@ import {
   import support from '../assets/support.svg'
   import banner from '../assets/bgFixed.png';
 import { Button } from '@/components/ui/button';
-import { dummyProductData } from '@/lib/productsData';
 import { useGetProductsQuery } from '@/app/features/api/productApiSlice';
 import { useGetProductsByCategoryQuery } from '@/app/features/api/productApiSlice';
-import Loader from '@/components/Loader';
 
 const Home = () => {
      const {data:products} = useGetProductsQuery({page:1, pageSize:5})
