@@ -18,10 +18,12 @@ import { Button } from '@/components/ui/button';
 import { dummyProductData } from '@/lib/productsData';
 import { useGetProductsQuery } from '@/app/features/api/productApiSlice';
 import { useGetProductsByCategoryQuery } from '@/app/features/api/productApiSlice';
+import Loader from '@/components/Loader';
 
 const Home = () => {
-     const {data:products} = useGetProductsQuery({searchTerm: ''})
+     const {data:products} = useGetProductsQuery({page:1, pageSize:5})
      const {data} = useGetProductsByCategoryQuery(3)
+     const {data:vegetables} = useGetProductsByCategoryQuery(1)
     const service  = [
         {
             icon: doorstep,
@@ -41,7 +43,7 @@ const Home = () => {
   return (
     <div>
         <Hero />
-
+       
         <div className='w-full 2xl:w-[70%] mx-auto lg:px-10 px-5'>
         {/* NEW ARRIVALS CAROUSEL SECTION */}
         <div className='w-full mb-10'>
@@ -59,7 +61,7 @@ const Home = () => {
                     }),
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
-                        {products?.slice(0,5).map((product, index) => (
+                        {products?.products?.slice(0,5).map((product, index) => (
                             <CarouselItem key={index} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
                                     <ProductCard {...product} />        
                             </CarouselItem>
@@ -81,6 +83,7 @@ const Home = () => {
             ))}
         </div>
 
+
         {/* BANNER AREA */}
         <div style={{backgroundImage: `url(${banner})`}} className='w-full h-[541px] my-10 bg-fixed bg-cover bg-center bg-no-repeat relative overflow-hidden'>
             <div className='absolute top-1/3 px-10 lg:bg-transparent bg-black/30 p-3 lg:p-0'>
@@ -90,6 +93,7 @@ const Home = () => {
                 </Button>
             </div>
         </div>
+
 
         {/* DRINKS CAROUSEL SECTION */}
         <div className='w-full mb-10'>
@@ -119,9 +123,10 @@ const Home = () => {
             </div>
         </div>
         
+
         {/* OTHER CATEGORIES CAROUSEL SECTION */}
         <div className='w-full mb-10'>
-            <h1 className='uppercase font-semibold text-primary text-lg'>Toiletries</h1>
+            <h1 className='uppercase font-semibold text-primary text-lg'>Vegetables</h1>
             <hr className='h-[2px] bg-black/30' />
             
             <div className='w-full my-5 '>
@@ -140,7 +145,7 @@ const Home = () => {
                     })
                 ]} className='lg:w-[95%] mb-10 mx-auto'>
                     <CarouselContent>
-                        {dummyProductData.map((product, index) => (
+                        {vegetables?.map((product, index) => (
                             <CarouselItem key={index} className='basis-2/3 lg:basis-1/4 2xl:basis-2/6'>
                                 
                                     <ProductCard {...product} />        
@@ -154,7 +159,7 @@ const Home = () => {
             </div>
         </div>
 
-      </div>
+        </div>
     </div>
   )
 }

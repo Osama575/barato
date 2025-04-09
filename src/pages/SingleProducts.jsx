@@ -14,13 +14,13 @@ import {
 import { useParams } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/app/features/cartSlice';
-import { useGetProductsQuery, useGetSingleProductQuery } from '@/app/features/api/productApiSlice';
+import { useGetProductsByCategoryQuery, useGetSingleProductQuery } from '@/app/features/api/productApiSlice';
 
 function SingleProducts() {
     const params = useParams()
     const dispatch = useDispatch()
     const {data:sp} = useGetSingleProductQuery(parseInt(params.id))
-    const {data:products} = useGetProductsQuery({searchTerm: ''})
+    const {data} = useGetProductsByCategoryQuery(sp?.productCategory)
 
     const addProduct = (product) => {
         dispatch(addToCart({...product}))
@@ -39,11 +39,6 @@ function SingleProducts() {
                 </div> 
                 <p className='border-b border-black/50 text-xs pb-2'>{sp?.productDescription}</p>
                 <div className='w-full mt-3 flex gap-4 items-center'>
-                    {/* <div className='flex items-center justify-center border border-black/50 rounded-xs'>
-                        <p className='flex items-center justify-center w-8 h-8 text-xl '>-</p>
-                        <p className='border-l border-black/50 flex items-center justify-center w-15 h-8 text-xl'>1</p>
-                        <p className='border-l border-black/5 flex items-center justify-center bg-primary w-8 h-8 text-xl  text-white'>+</p>
-                    </div> */}
                     <button onClick={() => addProduct(sp)} className='w-full bg-primary px-6 h-9 rounded-sm shadow-md text-white flex items-center justify-center cursor-pointer'>
                        Add to Cart
                     </button>
@@ -88,7 +83,7 @@ function SingleProducts() {
                         }),
                     ]} className='lg:w-[95%] mb-10 mx-auto'>
                         <CarouselContent>
-                            {products?.slice(0,5).map((product, index) => (
+                            {data?.slice(0,5).map((product, index) => (
                                 <CarouselItem key={index} className='basis-2/3 md:basis-1/3 lg:basis-1/4 2xl:basis-2/6 '>
                                     <ProductCard {...product} />        
                                 </CarouselItem>

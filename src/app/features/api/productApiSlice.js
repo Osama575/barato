@@ -31,13 +31,13 @@ const productApiSlice = apiSlice.injectEndpoints({
           }),
 
           getProducts: builder.query({
-            async queryFn({searchTerm, category, PriceRange, Region}) {
+            async queryFn({searchTerm, category, priceRange, region, page, pageSize}) {
               
               let query = supabase
                 .from('products')
-                .select('*')
+                .select('*', { count: 'exact' })
                 .order('created_at', { ascending: false })
-              
+
                   if(searchTerm){
                     query = query.textSearch('productName', `${searchTerm}`)
                   }
@@ -45,16 +45,23 @@ const productApiSlice = apiSlice.injectEndpoints({
                   if(category){
                     query = query.eq('productCategory', category)
                   }
-                  if(Region){
-                    query = query.eq('productRegion', Region)
+
+                  if(region){
+                    query = query.eq('productRegion', region)
                   }
                   
-                  if(PriceRange){
-                   query = query.gte('productPrice', PriceRange[0]).lte('productPrice', PriceRange[1])
+                  if(priceRange){
+                   query = query.gte('productPrice', priceRange[0]).lte('productPrice', priceRange[1])
                   }
 
-                  const { data, error } = await query
-                  return error ? { error } : { data }
+                  // 3. Apply pagination AFTER filters
+                  const startIndex = (page - 1) * pageSize;
+                  const endIndex = startIndex + pageSize - 1;
+                  query = query.range(startIndex, endIndex);
+
+                  const { data, error, count } = await query
+            
+                  return error ? { error } : { data: { products: data, totalCount: count }} 
               
             },
             providesTags: ['Products']
@@ -68,24 +75,57 @@ const productApiSlice = apiSlice.injectEndpoints({
           }),
 
           getAdminProducts: builder.query({
-            async queryFn({searchTerm}) {
+            async queryFn({searchTerm, page, pageSize}) {
               let query = supabase
               .from('products')
-              .select('*,regions(regionName),categories(categoryName)')
+              .select('*,regions(regionName),categories(categoryName)', {count: 'exact'})
               .order('created_at', { ascending: false })
             
               if(searchTerm){
                 query = query.textSearch('productName', `${searchTerm}`)
               }
+
+              const startIndex = (page - 1) * pageSize;
+              const endIndex = startIndex + pageSize - 1;
+              query = query.range(startIndex, endIndex);
               
-              const { data, error } = await query
-              return error ? { error } : { data }
+              const { data, error,count } = await query
+              console.log(`ADMIN QUERY COUNT ${data}`)
+              return error ? { error } : { data: { products: data, totalCount: count }} 
             },
             providesTags: ['Products']
-          })
+          }),
+
+          deleteProduct:builder.mutation({
+            async queryFn(id){
+                const {data, error} = await supabase.from('products').delete().eq('id', id).select('*')
+                
+                if (error) throw error
+                return {data}
+            },
+            invalidatesTags: (result, error, id) => ['Products'],
+
+            onQueryStarted: async (id, { dispatch, queryFulfilled, getState }) => {
+              // Optimistic update logic for paginated data
+              const patchResult = dispatch(
+                api.util.updateQueryData('getAdminProducts', (draft) => {
+                  const index = draft.products.findIndex(p => p.id === id);
+                  if (index !== -1) {
+                    draft.products.splice(index, 1);
+                    draft.count -= 1;
+                  }
+                })
+              );
+              try {
+                await queryFulfilled;
+              } catch {
+                patchResult.undo();
+              }
+            }
+          }),
           
     })
 })
 
-export const {useCreateProductMutation, useGetProductsQuery, useGetAdminProductsQuery, useGetSingleProductQuery, useGetProductsByCategoryQuery} = productApiSlice
+export const {useCreateProductMutation, useGetProductsQuery, useGetAdminProductsQuery, useGetSingleProductQuery, useGetProductsByCategoryQuery, useDeleteProductMutation} = productApiSlice
 

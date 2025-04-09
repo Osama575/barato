@@ -16,10 +16,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import supabase from '@/app/supabaseClient';
-import { useCreateProductMutation, useGetAdminProductsQuery } from '@/app/features/api/productApiSlice';
+import { useCreateProductMutation, useDeleteProductMutation, useGetAdminProductsQuery } from '@/app/features/api/productApiSlice';
 import { useGetCategoriesQuery } from '@/app/features/api/categoriesApiSlice';
 import useDebounce from '@/hooks/useDebounce';
 import { useGetRegionsQuery } from '@/app/features/api/regionsApiSlice';
+import ReactPaginate from 'react-paginate';
+import { useDispatch } from 'react-redux';
 
 const productSchema = z.object({
     productName: z.string().trim().min(1, "Please add a product name"),
@@ -31,14 +33,19 @@ const productSchema = z.object({
     productRegion: z.coerce.number().min(1, "Category selection is required")
 })
 
+
+
 const Products = () => {
     const [openModal,setOpenModal] = useState(false)
+    const [page, setPage] = useState(1)
     const [searchTerm,setSearchTerm] = useState('')
     const [createProduct, {isLoading}] = useCreateProductMutation()
     const value = useDebounce(searchTerm)
-    const {data: products} = useGetAdminProductsQuery({searchTerm: value});
+    const {data} = useGetAdminProductsQuery({searchTerm: value, page, pageSize: 7});
     const {data: categories} = useGetCategoriesQuery({searchTerm: ''});
     const {data: regions} = useGetRegionsQuery({searchTerm: ''});
+    const [deleteProduct,{isLoading:deleteLoading}] = useDeleteProductMutation()
+    const dispatch = useDispatch()
 
     const {register, handleSubmit,reset, formState:{errors,isSubmitting}} = useForm({
         resolver: zodResolver(productSchema)
@@ -83,8 +90,19 @@ const Products = () => {
         }
     }
 
+
+  const handlePageClick = ({ selected }) => {
+    setPage(selected + 1 );
+  };
+
+    useEffect(() => {
+        if(value){
+            setPage(1)
+        }
+    },[value])
+
   return (
-    <div className='w-full h-full pt-14 px-5'>
+    <div className='w-full h-screen overflow-y-scroll pt-14 px-5'>
         <div className='flex flex-col lg:flex-row items-center gap-3 lg:gap-0 justify-between'>
             <div className='flex items-center gap-5'>
                 <h1 className='font-semibold'>Product List</h1>
@@ -97,36 +115,59 @@ const Products = () => {
             </Button>
         </div>  
 
+            {deleteLoading && <p>DELETING PRODUCT ABEG</p>}
 
-                <div className='w-full lg:w-full overflow-x-scroll mt-10'>
-                    <Table className='lg:w-full w-[600px]'>
+                <div className='w-full lg:w-full h-[70%] overflow-x-scroll mt-10'>
+                    <Table className='lg:w-full h-full w-[600px] mb-5'>
                         <TableHeader>
-                            <TableRow>
-                                <TableHead className="text-left">Name</TableHead>
-                                <TableHead className='text-left'>Image</TableHead>
-                                <TableHead className='text-left'>Price</TableHead>
-                                <TableHead className='text-left'>Description</TableHead>
-                                <TableHead className='text-left'>Category</TableHead>
-                                <TableHead className='text-left'>Region</TableHead>
-                                <TableHead className="text-left"> Action </TableHead>
+                            <TableRow className='bg-primary hover:bg-primary'>
+                                <TableHead className="text-left text-white">Name</TableHead>
+                                <TableHead className='text-left text-white'>Image</TableHead>
+                                <TableHead className='text-center text-white'>Price</TableHead>
+                                <TableHead className='text-left text-white'>Description</TableHead>
+                                <TableHead className='text-left text-white'>Category</TableHead>
+                                <TableHead className='text-left text-white'>Region</TableHead>
+                                <TableHead className="text-left text-white"> Action </TableHead>
                             </TableRow>
                         </TableHeader>
         
                         <TableBody>
-                                {products?.map(product => (
+                                {data?.products?.map(product => (
                                     <TableRow key={product.id} className='rounded-lg shadow-lg bg-white'>
-                                        <TableCell className="grow w-[250px]"> {product.productName} </TableCell>
-                                        <TableCell className="grow w-[350px] lg:w-[250px]"> <img className='w-[50px] lg:h-[47px] h-[79.31px] object-cover' src={product.productImage} /> </TableCell>
-                                        <TableCell className='grow w-[250px]'> ${product.productPrice}</TableCell>
+                                        <TableCell className="grow w-[40px] lg:w-[250px]">{product.productName} </TableCell>
+                                        <TableCell className=""> 
+                                            <div className="relative lg:w-[70px] w-[80px] aspect-square overflow-hidden">
+                                                <img 
+                                                className="w-full h-full object-contain" 
+                                                src={product.productImage} 
+                                                alt={product.productName} 
+                                                />
+                                            </div>
+                                        </TableCell>
+
+                                        {/* <TableCell className="basis-5xl"> <img className='w-[300px] basis-5xl lg:h-[47px] h-[300.31px] object-cover' src={product.productImage} /> 
+                                        </TableCell> */}
+                                        <TableCell className='grow text-center'><p className='text-center  w-[150px] pr-4'> ${product.productPrice} </p></TableCell>
                                         <TableCell><p className='text-wrap  w-[300px] pr-4'>{product.productDescription}</p> </TableCell>
-                                        <TableCell><p className='text-wrap  w-[300px] pr-4'>{product.categories?.categoryName}</p> </TableCell>
-                                        <TableCell><p className='text-wrap  w-[300px] pr-4'>{product.regions?.regionName}</p> </TableCell>
-                                        <TableCell className='grow w-[250px]'><GoTrash  className='text-primary w-5 h-5' /></TableCell>
+                                        <TableCell><p className='text-wrap  w-[200px] pr-4'>{product.categories?.categoryName}</p> </TableCell>
+                                        <TableCell><p className='text-wrap  w-[200px] pr-4'>{product.regions?.regionName}</p> </TableCell>
+                                        <TableCell className='grow w-[250px]'><GoTrash onClick={() => dispatch(deleteProduct(product.id))}  className='text-primary w-5 h-5' /></TableCell>
                                     </TableRow>
                                 ))}
                         </TableBody>
                     </Table>
+
                 </div>
+                    <ReactPaginate
+                        previousLabel="←"
+                        nextLabel="→"
+                        pageCount={Math.ceil(data?.totalCount / 7)}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination"
+                        activeClassName="active"
+                        forcePage={page - 1} // Convert to zero-based index
+                        disableInitialCallback={true}
+                    />
 
                 {openModal &&  
                 <Modal 

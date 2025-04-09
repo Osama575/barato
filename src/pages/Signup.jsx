@@ -14,36 +14,34 @@ const signupSchema = z.object({
 })
 
 const Signup = () => {
-  const [signUpUser] = useSignUpUserMutation()
-   const {register, handleSubmit,reset, formState:{errors,isSubmitting}} = useForm({
+  const [signUpUser, {isLoading}] = useSignUpUserMutation()
+  const {register, handleSubmit,reset, formState:{errors,isSubmitting}} = useForm({
           resolver: zodResolver(signupSchema)
-    })
-   const isOnline = useSelector(state => state.persistedReducer.auth.user)
-    const navigate = useNavigate()
+  })
+  const isOnline = useSelector(state => state.persistedReducer.auth.user)
+  const navigate = useNavigate()
 
 
-    const onSubmit = async (formData) => {
-      try {
-     const {data, error} = await supabase.auth.signUp(formData)
-    
-     if(error) throw error
+  const onSubmit = async (formData) => {
+    try {
+    const {data, error} = await supabase.auth.signUp(formData)
 
-     const userDetails = {
-      id:data.user.id,
-      email:data.user.email,
-      role:'user'
-     }
+    if(error) throw error
 
-     const {data: newUser, error:newUserError} = await signUpUser(userDetails)
+    const userDetails = {
+    id:data.user.id,
+    email:data.user.email,
+    role:'user'
+  }
 
-     if(newUserError) throw newUserError
+  const {data: newUser, error:newUserError} = await signUpUser(userDetails)
 
-     console.log(newUser)
+  if(newUserError) throw newUserError
   
       reset()
     } catch (error) {
       console.error('Error logging in user:', error)
-    }
+  }
 }
 
 useEffect(() => {
@@ -72,8 +70,9 @@ useEffect(() => {
             {errors.password && (<p className="-mt-5 text-red-500 text-sm">{errors.password.message}</p>)}
 
 
-          <button className='bg-primary rounded-sm shadow-lg h-10 text-white font-semibold mb-6'>
-            {isSubmitting ? "Signing up" : "Sign up"}
+          <button className='bg-primary rounded-sm shadow-lg h-10 text-white flex items-center justify-center font-semibold mb-6'>
+            {isLoading ? (<div className='loader'></div>) : "Sign up"}
+           
           </button>
         </div>
       </form>

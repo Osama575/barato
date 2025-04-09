@@ -24,7 +24,7 @@ const Modal = ({ handleModal, children, formSize }) => {
     >
       <div 
         onClick={(e) => e.stopPropagation()}  
-        className={`lg:w-2/5 w-full ${sizeClass} bg-white rounded-md p-6 lg:px-16 flex flex-col gap-5 items-center justify-center relative z-10`}
+        className={`lg:w-3/5 w-full ${sizeClass} bg-white rounded-md p-6 lg:px-16 flex flex-col gap-5 items-center justify-center relative z-10`}
       >
         {children}
       </div>

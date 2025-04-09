@@ -14,7 +14,7 @@ const signInSchema = z.object({
 })
 
 const Login = () => {
-  const [signInUser] = useSignInUserMutation()
+  const [signInUser, {isLoading}] = useSignInUserMutation()
   const {register, handleSubmit,reset, formState:{errors,isSubmitting}} = useForm({
         resolver: zodResolver(signInSchema)
   })
@@ -60,7 +60,10 @@ useEffect(() => {
           </div>
           {errors.password && (<p className="-mt-5 text-red-500 text-sm">{errors.password.message}</p>)}
 
-          <button className='bg-primary rounded-sm shadow-lg h-10 text-white font-semibold'>Sign in</button>
+          <button className='bg-primary rounded-sm shadow-lg h-10 text-white flex items-center justify-center font-semibold'>
+            {isLoading ? (<div className='loader'></div> ) : 'Sign in'}
+          </button>
+
           <a href="" className='text-primary text-center'>Forgot Your Password?</a>
         </div>
       </form>
