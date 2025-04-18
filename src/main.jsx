@@ -9,8 +9,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './app/store';
 import { ToastContainer } from 'react-toastify';
-import { setAuthState, clearAuthState } from './app/features/authSlice';
-import supabase from './app/supabaseClient';
+
 
 
 createRoot(document.getElementById('root')).render(
