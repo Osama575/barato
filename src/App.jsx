@@ -19,6 +19,8 @@ import { useEffect } from "react"
 import supabase from "./app/supabaseClient"
 import { clearAuthState, setAuthState } from "./app/features/authSlice"
 import { useDispatch } from "react-redux"
+import ProfilePage from "./pages/ProfilePage"
+import Checkout from "./pages/Checkout"
 
 
 
@@ -93,7 +95,9 @@ function App() {
         <Route path="shop" element={<Shop />} />
         <Route path="shop/:id" element={<SingleProducts />} />
         <Route path="about" element={<About />} />
+        <Route path="profile" element={<ProfilePage />} />
         <Route path="cart" element={<Cart />} />
+        <Route path="checkout" element={<Checkout />} />
         <Route path="*" element={<ErrorPage />} />
       </Route>
 

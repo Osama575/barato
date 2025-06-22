@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { FiEye } from "react-icons/fi";
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { z } from 'zod';
 
 const signInSchema = z.object({
@@ -21,6 +21,7 @@ const Login = () => {
   const [hide, setHide] = useState();
   const navigate = useNavigate()
   const isOnline = useSelector(state => state.persistedReducer.auth.user)
+
 
   const onSubmit = async (formData) => {
       try {
@@ -64,7 +65,7 @@ useEffect(() => {
             {isLoading ? (<div className='loader'></div> ) : 'Sign in'}
           </button>
 
-          <a href="" className='text-primary text-center'>Forgot Your Password?</a>
+          <Link to="forgot-password" className='text-primary text-center'>Forgot Your Password?</Link>
         </div>
       </form>
 

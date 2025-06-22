@@ -11,17 +11,21 @@ import {
 import { GoTrash } from "react-icons/go";
 import { useDispatch, useSelector } from 'react-redux';
 import { decrementItem, incrementItem, removeFromCart, selectCartItems, selectCartTotal } from '@/app/features/cartSlice';
+import { Link, useNavigate } from 'react-router';
 
 const Cart = () => {
     const cartItems = useSelector(selectCartItems)
     const cartTotal = useSelector(selectCartTotal)
+    const user = useSelector(state => state.persistedReducer.auth.user)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
 
   return (
     <div className='w-screen 2xl:w-[80%] mx-auto flex flex-col lg:flex-row items-start gap-5 lg:px-10 lg:py-10 my-20'>
 
-        <div className='w-full lg:w-max flex grow overflow-x-scroll'>
+        <div className='w-full lg:w-max flex grow overflow-x-scroll lg:px-0 px-5'>
+            {cartItems.length > 0  ? (
             <Table className='lg:w-full w-[600px]'>
                 <TableHeader>
                     <TableRow>
@@ -58,6 +62,12 @@ const Cart = () => {
                     ))}
                 </TableBody>
             </Table>
+            ):(
+                <div className='w-full h-full flex items-center justify-center text-2xl font-semibold'>
+                    Your cart is empty
+                </div>
+            )}
+           
         </div>
 
         <div className='lg:w-[405px] w-[90%] mx-auto h-max flex flex-col gap-8 drop-shadow-md shadow-md rounded-md p-4 py-8 text-center'>
@@ -66,7 +76,9 @@ const Cart = () => {
                 <p className='lg:text-xl'>${parseFloat(cartTotal).toFixed(2)}</p>
             </div>
             <p>Taxes and shipping calculated at checkout</p>
-            <Button className='h-[58px] lg:text-xl font-semibold'>Checkout</Button>
+            <Button onClick={() => navigate('/checkout')} disabled={!cartItems.length > 0} className='w-full h-[58px] lg:text-xl font-semibold'>
+                {user ? "Checkout" : "Login to Checkout"}
+            </Button>
         </div>
     </div>
   )

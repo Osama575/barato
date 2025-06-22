@@ -9,6 +9,8 @@ import { Link, useNavigate } from 'react-router';
 import { z } from 'zod';
 
 const signupSchema = z.object({
+  firstName:z.string().min(1,'Please input your first name'),
+  lastName:z.string().min(1,'Please input your last name'),
   email: z.string().email().min(1, "please input your email"),
   password: z.string().min(6, 'please add your password')
 })
@@ -23,16 +25,23 @@ const Signup = () => {
 
 
   const onSubmit = async (formData) => {
+    console.log(formData)
     try {
     const {data, error} = await supabase.auth.signUp(formData)
 
     if(error) throw error
 
+    console.log(data)
+
     const userDetails = {
     id:data.user.id,
     email:data.user.email,
-    role:'user'
+    role:'user',
+    firstName:formData.firstName,
+    lastName:formData.lastName
   }
+
+  console.log("USER DETAILS: ", userDetails)
 
   const {data: newUser, error:newUserError} = await signUpUser(userDetails)
 
@@ -57,8 +66,12 @@ useEffect(() => {
         <h1 className='font-semibold text-2xl mb-1'>Create Account</h1>
         <p className='text-xs text-gray-500 mb-5'>Please register your details</p>
         <div className='flex flex-col gap-7'>
-          <input className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs ' type="text" name="FirstName" id="" placeholder='First Name' />
-          <input className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name='' id='' placeholder='Last Name' />
+          <input {...register('firstName')} className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs ' type="text" name="firstName" id="" placeholder='First Name' />
+           {errors.firstName && (<p className="-mt-5 text-red-500 text-sm">{errors.firstName.message}</p>)}
+
+
+          <input {...register('lastName')} className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="text" name='lastName' id='' placeholder='Last Name' />
+           {errors.lastName && (<p className="-mt-5 text-red-500 text-sm">{errors.lastName.message}</p>)}
 
           <input {...register('email')} className='border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type="email" name="email" placeholder='Email' />
           {errors.email && (<p className="-mt-5 text-red-500 text-sm">{errors.email.message}</p>)}

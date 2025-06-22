@@ -5,14 +5,17 @@ import { apiSlice } from "./apiSlice";
 const authAPiSlice = apiSlice.injectEndpoints({
     endpoints:(builder) => ({
         signUpUser: builder.mutation({
-            async queryFn({id, email, role}){
+            async queryFn({id, email, role, firstName, lastName}){
+                console.log(firstName, lastName)
                 try {
                     const { data, error } = await supabase
                     .from('users')
                     .insert([{
                       id,
                       email,
-                      role
+                      role,
+                      firstName,
+                      lastName
                     }])
                     .select();
 
@@ -62,8 +65,34 @@ const authAPiSlice = apiSlice.injectEndpoints({
             }
         }),
 
+        forgotPassword:builder.mutation({
+            async queryFn({email}){
+                try {
+                   const { data } = await supabase.auth.resetPasswordForEmail(email, {
+                        redirectTo: 'http://localhost:5173/auth/reset-password',
+                    });
+                    console.log(data)
+                    return data
+                } catch (error) {
+                    console.log("FORGOT PASSWORD ERROR: ", error)
+                }
+            }
+        }),
+
+        resetPassword:builder.mutation({
+            async queryFn({password}){
+                try {
+                     const response = await supabase.auth.updateUser({
+                        password
+                     });
+                     return response;
+                } catch (error) {
+                    console.log("RESET ERROR: ", error)
+                }
+            }
+        })
+
 
     })
 })
-
-export const {useSignInUserMutation, useSignUpUserMutation, useSignOutUserMutation, useGetUserQuery} = authAPiSlice;
+export const {useSignInUserMutation, useSignUpUserMutation, useSignOutUserMutation, useGetUserQuery, useForgotPasswordMutation, useResetPasswordMutation} = authAPiSlice;

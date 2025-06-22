@@ -51,6 +51,7 @@ const Products = () => {
         resolver: zodResolver(productSchema)
     })
 
+
     const handleImageUpload = async (file) => {
         try {
             const fileName = `${Date.now()}-${file.name}`
@@ -230,7 +231,6 @@ const Products = () => {
                         </label>
                         <input {...register('productImage')}   id='image' type='file' className='appearance-none cursor-pointer'/>
                         {errors.productImage && (<p className="mt-1 text-red-500 text-sm">{errors.productImage.message}</p>)}
-            
                     </div>
 
                     <Button type='submit' className='w-full h-[50px]'>

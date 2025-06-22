@@ -97,15 +97,20 @@ function Header() {
               <DropdownMenuContent>
                 {isOnline ? (
                   <>
-                  <DropdownMenuItem className='font-medium'>
-                  <img src={account} alt="" />
-                   User Dashboard
-                  </DropdownMenuItem>
+                    <DropdownMenuItem className='font-medium'>
+                        <Link to='/profile' className='w-full h-full flex items-center gap-2'>
+                          <img src={account} alt="" />
+                          User Dashboard
+                        </Link>
+                    </DropdownMenuItem>
+
                     <DropdownMenuSeparator />
+
                   <DropdownMenuItem>
                     <FaHeart className='text-primary w-8 h-8' />
                     Favourites
                   </DropdownMenuItem>
+
                   <DropdownMenuSeparator />
                   {data && data[0]?.role === 'admin' && (
                     <DropdownMenuItem >
@@ -143,7 +148,9 @@ function Header() {
 
       
           <div className='h-[50px] hidden lg:flex items-center justify-center'>
-            <input type="text" placeholder={`${t('search products')}...`} className='pl-4 border-y border-l w-[600px] rounded-l-lg border-secondary text-secondary h-full placeholder-white placeholder:text-xs' />
+
+            <input type="text" placeholder={`${t('search products')}...`} className='pl-4 border-y border-l w-[600px] rounded-l-lg border-secondary text-secondary h-full placeholder-white placeholder:text-xs focus:outline-none' />
+
             <button className='bg-black text-white flex items-center justify-center rounded-r-lg h-full gap-3 px-6 text-sm'>
               <img src={search} alt=""  className='w-4 h-4'/>
              {t('search')}
@@ -154,8 +161,9 @@ function Header() {
             <div className='relative'>
             <Link to='/cart'>
               <img src={cart} alt="" className='lg:w-9 lg:h-9 w-7 h-7' />
-              </Link>
-              <p className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'>{cartLength.length}</p>
+            </Link>
+              <p className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'>          {cartLength.length}
+              </p>
             </div>
             <div className='hidden lg:flex flex-col text-sm'>
               <Link to='/cart'>{ t('cart')}</Link>
