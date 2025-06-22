@@ -20,6 +20,16 @@ const Cart = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
+    const proceedToCheckout = () => {
+        if(!user){
+            navigate('/auth')
+        }else if(user && cartItems.length > 0){
+            navigate('/checkout') 
+        }else{
+            return ;
+        }
+    }
+
 
   return (
     <div className='w-screen 2xl:w-[80%] mx-auto flex flex-col lg:flex-row items-start gap-5 lg:px-10 lg:py-10 my-20'>
@@ -76,7 +86,7 @@ const Cart = () => {
                 <p className='lg:text-xl'>${parseFloat(cartTotal).toFixed(2)}</p>
             </div>
             <p>Taxes and shipping calculated at checkout</p>
-            <Button onClick={() => navigate('/checkout')} disabled={!cartItems.length > 0 && !user} className='w-full h-[58px] lg:text-xl font-semibold'>
+            <Button onClick={proceedToCheckout} className='w-full h-[58px] lg:text-xl font-semibold'>
                 {user ? "Checkout" : "Login to Checkout"}
             </Button>
         </div>
