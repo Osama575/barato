@@ -39,20 +39,20 @@ const ProfilePage = () => {
             {user ? (
                 <div className='w-full flex flex-col items-center justify-center'>
                     <div className='w-[100px] h-[100px] rounded-full bg-primary text-white text-4xl font-bold flex items-center justify-center gap-1'>
-                        <p>{user[0].firstName.slice(0,1)}</p>
-                        <p>{user[0].lastName.slice(0,1)}</p>
+                        <p>{user[0]?.firstName?.slice(0,1)}</p>
+                        <p>{user[0]?.lastName?.slice(0,1)}</p>
                     </div>
 
                
                     <div className='flex items-center gap-2 text-3xl font-semibold'>
                         {/* <img src={account} alt="" /> */}
-                        <h1>{user[0].firstName}</h1>
-                        <h1>{user[0].lastName}</h1>
+                        <h1>{user[0]?.firstName}</h1>
+                        <h1>{user[0]?.lastName}</h1>
                     </div>
 
                     <div className='flex items-center gap-2'>
                         <MdEmail className='w-4 h-4 text-primary' />
-                        <p>{user[0].email}</p>
+                        <p>{user[0]?.email}</p>
                     </div>
                
                 </div>

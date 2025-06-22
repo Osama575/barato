@@ -171,11 +171,11 @@ useEffect(() => {
                       <div className='w-full flex flex-col gap-2 my-2'>
 
                         {regions?.map((region) => (
-                          <div key={region.id} className='w-full flex items-center justify-between'>
-                            <p>{region.regionName}</p>
-                            <input onChange={() => handleFilterChange({ region: region.id })}  checked={filters.region === region.id} type='checkbox' className=' bg-gray-200 w-4 h-4' />
-                          </div>
-                        ))}
+                        <div key={region.id} className='w-full flex items-center justify-between'>
+                          <p>{region.regionName}</p>
+                          <input onChange={() => handleFilterChange({ region: region.id })}  checked={filters.region === region.id} type='checkbox' className=' bg-gray-200 w-4 h-4' />
+                        </div>
+                      ))}
 
                       </div>
                     </div>
@@ -186,7 +186,7 @@ useEffect(() => {
                         <p>Reset</p>
                       </div>
                       <hr className='h-[1px] bg-black/70'/>
-                      <RangeSlider min={0} max={100000} step={1} onChange={handlePriceChange} />
+                      <RangeSlider min={0} max={1000} step={1} onChange={handlePriceChange} />
                     </div>
                   </div>
               </SheetContent>
