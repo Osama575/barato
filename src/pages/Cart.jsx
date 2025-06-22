@@ -35,7 +35,7 @@ const Cart = () => {
     <div className='w-screen 2xl:w-[80%] mx-auto flex flex-col lg:flex-row items-start gap-5 lg:px-10 lg:py-10 my-20'>
 
         <div className='w-full lg:w-max flex grow overflow-x-scroll lg:px-0 px-5'>
-            {cartItems.length > 0  ? (
+            {cartItems && cartItems.length > 0  ? (
             <Table className='lg:w-full w-[600px]'>
                 <TableHeader>
                     <TableRow>

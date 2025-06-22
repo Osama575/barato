@@ -73,7 +73,7 @@ const Home = () => {
         
         {/* WHY US SECTION */}
         <div className='my-10 w-full h-full  border-t-[1px] border-b-[1px] border-black/30 py-5 flex flex-col lg:flex-row items-center justify-center lg:gap-20 gap-5'>
-            {service.map((item, index) => (
+            {service?.map((item, index) => (
                 <div key={index} className='lg:w-1/3 w-full bg-gray-300/30 lg:bg-transparent h-full flex items-center justify-center uppercase lg:border-b-0 last:border-b-0 lg:border-r-[1px] last:border-r-0 border-black/30 gap-5 px-5 py-4 lg:py-0'>
                     <img src={item.icon} className='w-10 h-10' />
                     <p>{item.text}</p>

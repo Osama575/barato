@@ -57,7 +57,7 @@ const ShippingList = () => {
     <div className='w-full'>
         <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-3'>
             <h1 className='text-3xl font-semibold text-primary'>Shipping Address</h1>
-            {shippingData.length < 4 ? (
+            {shippingData && shippingData.length < 4 ? (
                  <Button onClick={() => setOpenModal(true)} className='lg:w-max w-full h-[40px] px-6 flex items-center gap-3'>
                     <MdAddToPhotos />
                     Add Address

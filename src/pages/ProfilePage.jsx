@@ -61,7 +61,7 @@ const ProfilePage = () => {
             )}
             
 
-            {tabs.map((tab, idx) => (
+            {tabs?.map((tab, idx) => (
                 <div key={idx} onClick={() => setCurrentTab(tab)}  className={`${tab === currentTab && '!bg-primary text-white font-semibold'} w-full bg-[#F2F2F5] h-[50px] hover:bg-primary capitalize hover:text-white rounded-lg text-center flex items-center justify-start  gap-5 shadow-sm px-9 cursor-pointer`}>
                     {tab}
                 </div>

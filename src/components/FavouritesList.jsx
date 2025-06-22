@@ -4,7 +4,6 @@ import FavouriteCard from './FavouriteCard'
 
 const FavouritesList = () => {
   const {data} = useGetWishlistQuery()
-  console.log(data)
   return (
     <div className='h-full'>
       <h1 className='text-3xl font-semibold text-primary'>My Wishlist</h1>
