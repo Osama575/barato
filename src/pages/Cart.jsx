@@ -76,7 +76,7 @@ const Cart = () => {
                 <p className='lg:text-xl'>${parseFloat(cartTotal).toFixed(2)}</p>
             </div>
             <p>Taxes and shipping calculated at checkout</p>
-            <Button onClick={() => navigate('/checkout')} disabled={!cartItems.length > 0} className='w-full h-[58px] lg:text-xl font-semibold'>
+            <Button onClick={() => navigate('/checkout')} disabled={!cartItems.length > 0 && !user} className='w-full h-[58px] lg:text-xl font-semibold'>
                 {user ? "Checkout" : "Login to Checkout"}
             </Button>
         </div>
