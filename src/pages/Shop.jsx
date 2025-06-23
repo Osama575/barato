@@ -132,7 +132,7 @@ useEffect(() => {
                 <p>Reset</p>
               </div>
               <hr className='h-[1px] bg-black/70'/>
-              <RangeSlider min={0} max={1000} step={1} onChange={handlePriceChange} />
+              <RangeSlider min={filters.priceRange[0]} max={filters.priceRange[1]} step={1} onChange={handlePriceChange} />
             </div>
           </div>
 
@@ -186,7 +186,7 @@ useEffect(() => {
                         <p>Reset</p>
                       </div>
                       <hr className='h-[1px] bg-black/70'/>
-                      <RangeSlider min={0} max={1000} step={1} onChange={handlePriceChange} />
+                      <RangeSlider min={filters.priceRange[0]} max={filters.priceRange[1]} step={1} onChange={handlePriceChange} />
                     </div>
                   </div>
               </SheetContent>
