@@ -32,6 +32,7 @@ import { useGetUserQuery, useSignOutUserMutation } from '@/app/features/api/auth
 
 function Header() {
   const [openMenu, setOpenMenu] = useState(false)
+  const [dropMenu, setDropMenu] = useState(false)
   const location = useLocation()
   const { t } = useTranslation();
   const { i18n } = useTranslation();
@@ -87,7 +88,7 @@ function Header() {
 
              {/* USER ACCOUNT DROPDOWN */}
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger data-state='false'>
                 <div className='flex justify-center items-center gap-2'>
                   <img src={account} alt="" />
                   <p>MY ACCOUNT </p>
@@ -97,23 +98,16 @@ function Header() {
               <DropdownMenuContent>
                 {isOnline ? (
                   <>
-                    <DropdownMenuItem className='font-medium'>
+                    <DropdownMenuItem asChild className='font-medium'>
                         <Link to='/profile' className='w-full h-full flex items-center gap-2'>
                           <img src={account} alt="" />
                           User Dashboard
                         </Link>
                     </DropdownMenuItem>
 
-                    <DropdownMenuSeparator />
-
-                  <DropdownMenuItem>
-                    <FaHeart className='text-primary w-8 h-8' />
-                    Favourites
-                  </DropdownMenuItem>
-
                   <DropdownMenuSeparator />
                   {data && data[0]?.role === 'admin' && (
-                    <DropdownMenuItem >
+                    <DropdownMenuItem asChild >
                       <MdOutlineDashboard className='text-primary w-8 h-8' />
                       <Link to='/admin' className='w-full h-full'>
                          Admin Dashboard
@@ -127,7 +121,7 @@ function Header() {
                   </DropdownMenuItem>
                   </>  
                 ): (
-                  <DropdownMenuItem >
+                  <DropdownMenuItem asChild >
                       <Link to='/auth' className='w-full h-full'>
                         Login
                       </Link>
@@ -189,7 +183,7 @@ function Header() {
         <nav className='hidden lg:flex'>
           <ul className='flex gap-16 text-[16px] text-white items-center justify-center font-normal'>
             {navigationLinks.map(link => (
-              <Link key={link.path} to={link.path}>
+              <Link  key={link.path} to={link.path}>
                 <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-white'}`}>{t(`${link.name}`)}</li>
               </Link>
             ))}
@@ -199,10 +193,10 @@ function Header() {
 
       <Sheet open={openMenu} onOpenChange={setOpenMenu} >
         <SheetContent side='left'>
-            <ul className='flex flex-col gap-6 text-[16px] text-black items-start justify-start px-5 py-5'>
+            <ul className='w-full flex flex-col gap-6 text-[16px] text-black items-start justify-start px-5 py-5'>
             {navigationLinks.map(link => (
-              <Link onClick={() => setOpenMenu(false)} key={link.path} to={link.path}>
-                <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold' : 'text-black'}`}>{link.name}</li>
+              <Link className='w-full' onClick={() => setOpenMenu(false)} key={link.path} to={link.path}>
+                <li className={`uppercase ${location.pathname === link.path ? 'text-primary font-bold w-full' : 'text-black w-full'}`}>{link.name}</li>
               </Link>
             ))}
             </ul>

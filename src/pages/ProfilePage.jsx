@@ -15,7 +15,7 @@ const tabs = [
 
 const ProfilePage = () => {
     const userId = useSelector(state => state.persistedReducer.auth.user)
-    const {data:user} = useGetUserQuery(userId.id);
+    const {data:user} = useGetUserQuery(userId?.id);
     const [currentTab, setCurrentTab] = useState('orders')
 
     const renderView = () => {

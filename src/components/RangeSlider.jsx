@@ -1,53 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const RangeSlider = ({ min, max, step = 1, onChange }) => {
   const [minPrice, setMinPrice] = useState(min);
   const [maxPrice, setMaxPrice] = useState(max);
+  const containerRef = useRef(null);
 
-  // Handle minimum price change
+  // Sync with parent min/max changes
+  useEffect(() => {
+    setMinPrice(min);
+    setMaxPrice(max);
+  }, [min, max]);
+
   const handleMinChange = (e) => {
-    const value = Number(e.target.value);
-    if (value <= maxPrice - step) {
-      setMinPrice(value);
-      onChange(value, maxPrice);
-    }
+    const value = Math.min(Number(e.target.value), maxPrice - step);
+    setMinPrice(value);
+    onChange(value, maxPrice);
   };
 
-  // Handle maximum price change
   const handleMaxChange = (e) => {
-    const value = Number(e.target.value);
-    if (value >= minPrice + step) {
-      setMaxPrice(value);
-      onChange(minPrice, value);
-    }
+    const value = Math.max(Number(e.target.value), minPrice + step);
+    setMaxPrice(value);
+    onChange(minPrice, value);
   };
 
-    // Calculate progress bar width based on min/max values
-    const progressStyle = {
-        left: `${((minPrice - min) / (max - min)) * 100}%`,
-        width: `${((maxPrice - minPrice) / (max - min)) * 100}%`,
-      };
+  // Calculate progress bar position
+  const progressStyle = {
+    left: `${((minPrice - min) / (max - min)) * 100}%`,
+    width: `${((maxPrice - minPrice) / (max - min)) * 100}%`,
+  };
 
   return (
-    <div className="w-[100%] p-6 bg-white rounded-lg">
-      {/* Label */}
-      <div className="w-full flex justify-between mt-4 mb-4 text-sm relative">
-        <span className="absolute bg-black text-white p-1 px-4 rounded-lg -left-4 -top-6">N{minPrice}</span>
-        <span className="absolute bg-black text-white p-1 px-4 rounded-lg -right-4 -top-6">N{maxPrice}</span>
+    <div className="w-full p-4 bg-white rounded-lg">
+      {/* Value Labels - fixed positioning issues */}
+      <div className="flex justify-between w-full mb-6">
+        <div className="bg-black text-white py-1 px-3 rounded-md text-sm">
+          ₦{minPrice}
+        </div>
+        <div className="bg-black text-white py-1 px-3 rounded-md text-sm">
+          ₦{maxPrice}
+        </div>
       </div>
 
-      {/* Range Slider Container */}
-      <div className="relative w-full">
-         {/* Background Track */}
-         <div className="absolute top-1/2 left-0 right-0 h-2 bg-gray-300 rounded-full transform -translate-y-1/2" />
-
-        {/* Progress Bar (Dynamic Red) */}
+      {/* Slider Track Container */}
+      <div className="relative w-full h-8" ref={containerRef}>
+        {/* Background Track */}
+        <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-300 rounded-full -translate-y-1/2" />
+        
+        {/* Active Progress Bar */}
         <div
-        className="absolute top-1/2 h-2 bg-[#E31E24] rounded-full transform -translate-y-1/2"
-        style={progressStyle}
+          className="absolute top-1/2 h-1.5 bg-red-600 rounded-full -translate-y-1/2 z-10"
+          style={progressStyle}
         />
-
-        {/* Min Price Input */}
+        
+        {/* Min Thumb */}
         <input
           type="range"
           min={min}
@@ -55,10 +60,23 @@ const RangeSlider = ({ min, max, step = 1, onChange }) => {
           step={step}
           value={minPrice}
           onChange={handleMinChange}
-          className='absolute w-full h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:relative [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-just-red [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer'
+          className="absolute w-full h-full appearance-none bg-transparent pointer-events-none z-20
+            [&::-webkit-slider-thumb]:appearance-none 
+            [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 
+            [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white 
+            [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-red-600 
+            [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto
+            [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:active:scale-125
+            
+            [&::-moz-range-thumb]:appearance-none 
+            [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 
+            [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white 
+            [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-red-600 
+            [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto
+            [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:active:scale-125"
         />
-
-        {/* Max Price Input */}
+        
+        {/* Max Thumb */}
         <input
           type="range"
           min={min}
@@ -66,10 +84,22 @@ const RangeSlider = ({ min, max, step = 1, onChange }) => {
           step={step}
           value={maxPrice}
           onChange={handleMaxChange}
-          className='absolute w-full  h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:relative [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:bg-just-red [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer'
+          className="absolute w-full h-full appearance-none bg-transparent pointer-events-none z-30
+            [&::-webkit-slider-thumb]:appearance-none 
+            [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 
+            [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white 
+            [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-red-600 
+            [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto
+            [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:active:scale-125
+            
+            [&::-moz-range-thumb]:appearance-none 
+            [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 
+            [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white 
+            [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-red-600 
+            [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto
+            [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:active:scale-125"
         />
       </div>
-
     </div>
   );
 };

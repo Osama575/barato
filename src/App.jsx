@@ -21,6 +21,7 @@ import { clearAuthState, setAuthState } from "./app/features/authSlice"
 import { useDispatch } from "react-redux"
 import ProfilePage from "./pages/ProfilePage"
 import Checkout from "./pages/Checkout"
+import ProtectedPage from "./components/ProtectedPage"
 
 
 
@@ -92,21 +93,30 @@ function App() {
           <Route path="reset-password" element={<ResetPassword/>} />
         </Route>
 
-        <Route path="shop" element={<Shop />} />
-        <Route path="shop/:id" element={<SingleProducts />} />
-        <Route path="about" element={<About />} />
-        <Route path="profile" element={<ProfilePage />} />
-        <Route path="cart" element={<Cart />} />
-        <Route path="checkout" element={<Checkout />} />
-        <Route path="*" element={<ErrorPage />} />
-      </Route>
+          {/* PUBLIC ROUTES */}
+          <Route path="shop" element={<Shop />} />
+          <Route path="shop/:id" element={<SingleProducts />} />
+          <Route path="about" element={<About />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="*" element={<ErrorPage />} />
 
-      <Route path="admin" element={<AdminLayout />}>
+
+        {/* AUTHENTICATED ROUTES */}
+        <Route element={<ProtectedPage />}>
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="checkout" element={<Checkout />} />
+        </Route>
+       </Route>
+
+      <Route element={<ProtectedPage />}>
+        <Route path="admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="categories" element={<Categories />} />
           <Route path="regions" element={<Regions />} />
         </Route>
+      </Route>
+      
     </Routes>
   )
 }
