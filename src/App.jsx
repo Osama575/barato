@@ -41,30 +41,6 @@ function App() {
 
       // Handle authenticated states
       if (session?.user) {
-        // try {
-        //   // Fetch complete user profile
-        //   const { data, error } = await supabase
-        //     .from('users')
-        //     .select('*')
-        //     .eq('id', session.user.id)
-        //     .single();
-
-        //   if (error) throw error;
-        //   if (!data) throw new Error('User profile not found');
-
-        //   // Update auth state with complete user information
-        //   dispatch(setAuthState({
-        //     id: session.user.id,
-        //     email: session.user.email,
-        //     role: data.role,  // Assuming you have a role column
-        //   }));
-
-        // } catch (error) {
-        //   console.error('Auth state error:', error);
-        //   // Handle missing profile or other errors
-        //   dispatch(clearAuthState());
-        //   await supabase.auth.signOut();
-        // }
         console.log(session)
         dispatch(setAuthState({id: session.user.id}));
         

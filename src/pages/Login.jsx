@@ -6,10 +6,14 @@ import { useForm } from 'react-hook-form';
 import { FiEye } from "react-icons/fi";
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 import { z } from 'zod';
 
 const signInSchema = z.object({
-  email: z.string().email().min(1, "please input your email"),
+  email: z
+    .string()
+    .nonempty("please input your email")
+    .email("please enter a valid email address"),
   password: z.string().min(6, 'please add your password')
 })
 
@@ -18,21 +22,17 @@ const Login = () => {
   const {register, handleSubmit,reset, formState:{errors,isSubmitting}} = useForm({
         resolver: zodResolver(signInSchema)
   })
-  const [hide, setHide] = useState();
+  const [hide, setHide] = useState(true);
   const navigate = useNavigate()
   const isOnline = useSelector(state => state.persistedReducer.auth.user)
 
 
   const onSubmit = async (formData) => {
       try {
-     const {data: newUser, error:newUserError} = await signInUser(formData)
-
-     if(newUserError) throw newUserError
-
-     console.log(newUser)
-     
+     const response = await signInUser(formData).unwrap();
       reset()
     } catch (error) {
+      toast.error(error.data)
       console.error('Error logging in user:', error)
     }
 }
@@ -57,7 +57,7 @@ useEffect(() => {
 
           <div className='relative'>
             <input {...register('password')} className='w-full border border-gray rounded-sm shadow-xs h-10 p-3 placeholder:text-xs' type={hide ? 'password' : "text"} placeholder='Password' />
-            <FiEye onClick={() => setHide(!hide)} className='absolute right-5 top-3'/>
+            <FiEye onClick={() => setHide(!hide)} className='absolute right-5 top-3 eye-icon'/>
           </div>
           {errors.password && (<p className="-mt-5 text-red-500 text-sm">{errors.password.message}</p>)}
 
@@ -72,8 +72,8 @@ useEffect(() => {
 
       <div className='w-full flex justify-center items-center flex-col gap-2 md:w-[300px]'>
         <h1 className='text-md font-semibold '>Don’t Have An Account?</h1>
-        <Link className='w-full' to='/auth/register'>
-          <button className='border border-primary shadow-sm rounded-md w-full h-10 text-primary font-semibold text-sm'>Create Account</button>
+        <Link  className='flex items-center justify-center border border-primary shadow-sm rounded-md w-full h-10 text-primary font-semibold text-sm' to='/auth/register'>
+          Create Account
         </Link>
         <p className='text-center text-xs lg:text-sm px-2'>Your privacy and security are important to us. For more information on how we use your data read our</p>
         <p className='text-xs text-primary font-semibold lg:text-sm'>Privacy Policy.</p>

@@ -68,8 +68,10 @@ function Header() {
 
           {/* LANGUAGES DROPDOWN */}
           <DropdownMenu>
-            <DropdownMenuTrigger>
-                {Navlanguages.find(l => l.value === i18n.language)?.label}
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="px-2 py-1">
+                {Navlanguages.find(l => l.value === i18n.language)?.label || 'Language'}
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-[120px] shadow-lg">
               {Navlanguages.map((item, index) => (
@@ -88,18 +90,18 @@ function Header() {
 
              {/* USER ACCOUNT DROPDOWN */}
             <DropdownMenu>
-              <DropdownMenuTrigger data-state='false'>
-                <div className='flex justify-center items-center gap-2'>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex justify-center items-center gap-2">
                   <img src={account} alt="" />
-                  <p>MY ACCOUNT </p>
-                </div>
+                  <span>MY ACCOUNT</span>
+                </Button>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent>
                 {isOnline ? (
                   <>
                     <DropdownMenuItem asChild className='font-medium'>
-                        <Link to='/profile' className='w-full h-full flex items-center gap-2'>
+                        <Link to='/profile' className='w-full h-full flex items-center gap-2 outline-none'>
                           <img src={account} alt="" />
                           User Dashboard
                         </Link>
@@ -107,10 +109,10 @@ function Header() {
 
                   <DropdownMenuSeparator />
                   {data && data[0]?.role === 'admin' && (
-                    <DropdownMenuItem asChild >
-                      <MdOutlineDashboard className='text-primary w-8 h-8' />
-                      <Link to='/admin' className='w-full h-full'>
-                         Admin Dashboard
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="flex w-full h-full items-center gap-2">
+                        <MdOutlineDashboard className="text-primary w-8 h-8" />
+                        <span>Admin Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
@@ -156,7 +158,8 @@ function Header() {
             <Link to='/cart'>
               <img src={cart} alt="" className='lg:w-9 lg:h-9 w-7 h-7' />
             </Link>
-              <p className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'>          {cartLength.length}
+              <p data-test='cart-length' className='absolute bg-secondary text-tertiary text-xs -top-3 lg:-right-2 -right-3 px-2 py-1 rounded-full'> 
+                {cartLength.length}
               </p>
             </div>
             <div className='hidden lg:flex flex-col text-sm'>
