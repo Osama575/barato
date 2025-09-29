@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  # Stage 1: Build the React app
+  # Stage 1: Build the app
   install_and_build:
     runs-on: ubuntu-latest
     name: Build Stage - Install and Build
@@ -31,18 +31,18 @@ jobs:
     runs-on: ubuntu-latest
     name: Security Scan Stage
     needs: install_and_build
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --- SonarQube SAST ---
+      # --- SonarQube / SonarCloud SAST ---
+      # If you're using SonarCloud, this action works; ensure your project key/name are correct.
       - name: SAST Security Scan (SonarQube)
-        uses: SonarSource/sonarcloud-github-action@v2
+        uses: SonarSource/sonarcloud-github-action@v1
         with:
-          projectKey: 'Osama575_barato'
-          projectName: 'barato'
-          token: ${{ secrets.SONAR_TOKEN }}
+          sonar-project-key: 'Osama575_barato'
+          sonar-project-name: 'barato'
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
 
       - name: Run SonarQube analysis
         run: sonar-scanner
@@ -54,10 +54,9 @@ jobs:
       - name: Run Snyk test for vulnerabilities
         run: snyk test --all-projects > snyk-result.json || true
 
-      # --- Start app for ZAP (port 5173) ---
+      # --- Start app for ZAP on :5173 (Vite preview preferred; fallback to dev) ---
       - name: Start the app (background on :5173)
         run: |
-          # Prefer Vite preview if available; else fall back to dev
           if npm run -s | grep -qE '^\s*preview\s*:'; then
             echo "Starting: npm run preview -- --port 5173 --host 0.0.0.0"
             npm run preview -- --port 5173 --host 0.0.0.0 &
@@ -68,15 +67,14 @@ jobs:
         env:
           CI: "false"
 
-      - name: Wait for app to be ready
+      - name: Wait for app to be ready (50s) + health check
         run: |
           echo "Waiting 50s for http://localhost:5173 ..."
           sleep 50
           echo "Health check:"
           curl --max-time 5 -I http://localhost:5173 || (echo "App not reachable on :5173" && exit 1)
 
-      # --- OWASP ZAP DAST ---
-      # Use official ZAP image, host networking, and mount workspace to capture report
+      # --- OWASP ZAP DAST (use current image; host networking; mount workspace; write HTML report) ---
       - name: Run OWASP ZAP baseline scan
         env:
           TARGET_URL: http://localhost:5173
