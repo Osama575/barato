@@ -1,94 +1,115 @@
-name: DevOps Pipeline with Security Scan -  Barato
+name: DevOps Pipeline with Security Scan - Barato
 
 on:
   push:
-    branches:
-      - main  # Runs when pushing to the main branch
+    branches: [ main ]
   pull_request:
-    branches:
-      - main  # Runs on pull requests targeting the main branch
+    branches: [ main ]
 
 jobs:
   # Stage 1: Build the React app
   install_and_build:
     runs-on: ubuntu-latest
     name: Build Stage - Install and Build
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build the React app
+      - name: Build the app
         run: npm run build
 
   # Stage 2: Security Scan
   security_scan:
     runs-on: ubuntu-latest
     name: Security Scan Stage
-    needs: install_and_build  # This job runs after the install_and_build job
+    needs: install_and_build
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      # SonarQube SAST (Static Application Security Testing)
-      - name: SAST Security Scan(SonarQube)
-        uses: SonarSource/sonarcloud-github-action@v1
+      # --- SonarQube SAST ---
+      - name: SAST Security Scan (SonarQube)
+        uses: SonarSource/sonarcloud-github-action@v2
         with:
-          sonar-project-key: 'Osama575_barato'
-          sonar-project-name: ''
-          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          projectKey: 'Osama575_barato'
+          projectName: 'barato'
+          token: ${{ secrets.SONAR_TOKEN }}
 
       - name: Run SonarQube analysis
         run: sonar-scanner
 
-      # Snyk SCA (Software Composition Analysis)
+      # --- Snyk SCA ---
       - name: Install Snyk CLI
         run: npm install -g snyk
 
       - name: Run Snyk test for vulnerabilities
-        run: snyk test --all-projects > snyk-result.json || true  # Save output to a file and continue even if vulnerabilities are found
+        run: snyk test --all-projects > snyk-result.json || true
 
-      # OWASP ZAP DAST (Dynamic Application Security Testing)
-      - name: Set up OWASP ZAP Docker container
-        uses: docker://owasp/zap2docker-stable:latest
-
-      - name: Run OWASP ZAP DAST scan
+      # --- Start app for ZAP (port 5173) ---
+      - name: Start the app (background on :5173)
         run: |
-          docker run -t --network host owasp/zap2docker-stable zap-baseline.py -t http://localhost:5173  # Replace with your live app's URL if available
+          # Prefer Vite preview if available; else fall back to dev
+          if npm run -s | grep -qE '^\s*preview\s*:'; then
+            echo "Starting: npm run preview -- --port 5173 --host 0.0.0.0"
+            npm run preview -- --port 5173 --host 0.0.0.0 &
+          else
+            echo "Starting: npm run dev -- --port 5173 --host 0.0.0.0"
+            npm run dev -- --port 5173 --host 0.0.0.0 &
+          fi
         env:
-          TARGET_URL: http://localhost:5173  # Update with actual target URL
+          CI: "false"
 
-      # Echo Snyk results
+      - name: Wait for app to be ready
+        run: |
+          echo "Waiting 50s for http://localhost:5173 ..."
+          sleep 50
+          echo "Health check:"
+          curl --max-time 5 -I http://localhost:5173 || (echo "App not reachable on :5173" && exit 1)
+
+      # --- OWASP ZAP DAST ---
+      # Use official ZAP image, host networking, and mount workspace to capture report
+      - name: Run OWASP ZAP baseline scan
+        env:
+          TARGET_URL: http://localhost:5173
+        run: |
+          mkdir -p "${GITHUB_WORKSPACE}/zap-reports"
+          docker run --rm -t \
+            --network host \
+            -v "${GITHUB_WORKSPACE}:/zap/wrk" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py \
+              -t "${TARGET_URL}" \
+              -r zap-report.html
+          mv zap-report.html "${GITHUB_WORKSPACE}/zap-reports/zap-report.html"
+
+      # --- Echo results to logs ---
       - name: Echo Snyk results
         run: |
-          echo "Snyk Test Results:"
-          cat snyk-result.json
+          echo "===== Snyk Test Results ====="
+          cat snyk-result.json || true
 
-      # Echo OWASP ZAP results
-      - name: Echo OWASP ZAP results
+      - name: Echo OWASP ZAP results (first 200 lines)
         run: |
-          echo "OWASP ZAP Scan Results:"
-          cat ./zap-reports/*.html
+          echo "===== OWASP ZAP Report ====="
+          head -n 200 zap-reports/zap-report.html || true
 
-  # Stage 3: Deploy
+  # Stage 3: Deploy (placeholder)
   deploy:
     runs-on: ubuntu-latest
     name: Deploy Stage
-    needs: security_scan  # This job runs after the security_scan job
-
+    needs: security_scan
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Deploy application (echo message)
-        run: |
-          echo "Deployment successful! Everything works."
+        run: echo "Deployment successful! Everything works."
